@@ -2,9 +2,9 @@
 
 #### Export a Firebird database to CSV, JSON or other pandas format
 
-[![Firebird](logo-firebird-black.png)] 
+![Firebird](logo-firebird-black.png)
 
-Import a Firebird database to pandas dataframes, show a summary of the database table names, field names, field data types, 
+Import a Firebird[^1] database to pandas dataframes, show a summary of the database table names, field names, field data types, 
 and index columns, optionally extract and save table data to
   a directory, in CSV/JSON (or potentially in any other pandas format), and also extract any other binary files from the database blobs and save. A subset of the tables and fields can be specified (in python) and the number of records returned can be limited for testing purposes. Output data can be combined or into one or saved in individual files named after the tables.
 
@@ -86,3 +86,4 @@ options:
 ### Test:
   pytest
 
+[^1]: Firebird is a trademark of https://firebirdsql.org/ and is used under the 'fair use' case, https://firebirdsql.org/en/firebird-brand-faq 
