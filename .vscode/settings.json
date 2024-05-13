@@ -1,0 +1,15 @@
+{
+//    "[python]": {
+//        "editor.defaultFormatter": "ms-python.black-formatter",
+//        "editor.formatOnSave": true
+//    },
+    "python.testing.pytestArgs": [
+      //"-s test",
+//        "--tb=auto",
+
+    ],
+    //"python."
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+}
+

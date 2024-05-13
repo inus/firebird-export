@@ -1,0 +1,14 @@
+//other launch setting
+[{
+            "name": "Pyfile",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            //"args":  [ "-d", "./app.fdb", "-e", "-l","-m 100", 
+            //         "-o" , "export/JSON", "-F", "json"
+            //         ] ,
+        },
+
+    ]

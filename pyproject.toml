@@ -1,0 +1,72 @@
+[build-system]
+requires = ["setuptools",]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "firebird-export"
+authors = [
+    {name = "Inus Scheepers", email = "In.uS.sc@gmail.com"}
+]
+description = "Export Firebird database to CSV, JSON or other pandas format from dataframe"
+version = "0.1.0"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "pandas",
+    "fdb",
+    "firebird-base",
+    "firebird-driver",
+    "firebird-lib",
+]
+license = { file = "LICENSE" }
+
+keywords = ["Firebird", "Database", "JSON", "pandas", "CSV", "export", "dataframe" ]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Education",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: MacOS",
+    "Framework :: Pytest",
+    "Topic :: Software Development",
+    "Topic :: Database",
+    "Topic :: Database :: Front-Ends",
+    "Topic :: Utilities",
+    "Topic :: File Formats :: JSON",
+    "Topic :: File Formats",
+]
+
+[project.scripts]
+firebird-export = "fb_export"
+
+[project.urls]
+Homepage = "https://github.com/inus/firebird-export"
+#Documentation = "https://readthedocs.org"
+#Repository = "https://github.com/me/spam.git"
+#Issues = "https://github.com/me/spam/issues"
+#Changelog = "https://github.com/me/spam/blob/master/CHANGELOG.md"
+
+[tool.pytest.ini_options]
+testpaths =  "test"
+minversion = "6.0"
+addopts = "-v -ra -q"
+log_cli = true
+log_cli_level = "INFO"
+log_format = "%(asctime)s %(levelname)s %(message)s"
+log_date_format = "%Y-%m-%d %H:%M:%S"
+#filterwarnings = "ignore"
+#norecursedirs = docs build
+

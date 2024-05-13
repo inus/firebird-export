@@ -1,0 +1,52 @@
+#Run some queries on db employee.fdb
+import fdb,os
+
+DB='test/TEST.fdb' 
+
+def test_sqlcreate():
+    
+    if os.path.isfile(DB):
+        print("Connecting to existing" + DB)
+        con = fdb.connect(DB, user='SYSDBA', password='masterkey')
+
+        cur = con.cursor()
+
+        CT = """\
+if (not exists(select 1 from rdb$relations where rdb$relation_name = 'LANGUAGES')) then
+execute statement 'create table languages (name varchar(20),year_released integer)'
+"""
+        con.commit()
+
+    else:
+        print("Creating new" + DB)
+
+        con = fdb.create_database("create database 'test/TEST.fdb' \
+                                  user 'SYSDBA' password 'masterkey'")
+        
+        cur = con.cursor()
+
+        cur.execute("create table languages ( name varchar(20), year_released integer)")
+        con.commit()
+    
+
+    #print(cur.execute("select * from languages ").fetchall())
+    
+    cur.execute("insert into LANGUAGES (name, year_released) values ('C',        1972)")
+    cur.execute("insert into languages (name, year_released) values ('Python',   1991)")
+    con.commit()
+
+    newLanguages = [
+    ('Lisp',  1958),
+    ('Dylan', 1995),
+     ]
+    
+    cur.executemany("insert into languages (name, year_released) values (?, ?)", newLanguages)
+    con.commit()
+    result = cur.execute("select * from languages order by year_released").fetchall()
+    print(result)
+    assert result[1]==('C', 1972)
+
+    con.drop_database()
+
+test_sqlcreate()
+
