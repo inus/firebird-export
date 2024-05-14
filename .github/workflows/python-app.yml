@@ -26,7 +26,7 @@ jobs:
         cache: 'pip' 
     - name: Install dependencies
       run: |
-        sudo apt -q update
+        sudo apt update > /dev/null 
         sudo apt-get -q update
         sudo apt-get -q -y install tmux vim libncurses5
         wget -q https://github.com/FirebirdSQL/firebird/releases/download/R2_5_8/FirebirdCS-2.5.8.27089-0.amd64.tar.gz
@@ -43,7 +43,7 @@ jobs:
         ./fb_export -h
     - name: Export test json data
       run: |
-        ./fb_export -d test/employee.fdb -e -o test/json       
+        ./fb_export -d test/employee.fdb -e -o test/json -b   
     - name: Run tests with pytest
       run: |
         pytest    
