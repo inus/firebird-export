@@ -3,7 +3,7 @@ import fdb,os,pytest
 
 DB='test/TEST.fdb' 
 
-@pytest.mark.skipif(os.environ['GITHUB_ACTIONS'], reason="Fails in Github Actions")
+@pytest.mark.skipif(os.environ['GITHUB_ACTIONS']==true, reason="Fails in Github Actions")
 
 def test_sqlcreate():
     
