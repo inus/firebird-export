@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-#Dump firebase data 
- 
+# Dump firebase data
+
 import fdb
 from shutil import rmtree
 import pandas as pd
-import sys, os
+import sys
+import os
 from pathlib import Path
 from args import get_args
 from dftools import fix_fields
@@ -14,7 +15,7 @@ from utils import mkdirs
 # exported from the employee test database
 from limit_sql import SFields, STable
 
-#check for test data
+# check for test data
 from utils import unzip_testdb
 unzip_testdb()
 
@@ -24,36 +25,36 @@ def main():
 
     if os.getenv('GITHUB_ACTIONS'):
         con = fdb.connect(args.path_to_db, user=args.user, password=args.password,
-                           fb_library_name='/opt/firebird/lib/libfbembed.so')
+                fb_library_name='/opt/firebird/lib/libfbembed.so')
     else:
-        con=fdb.connect(args.path_to_db, user=args.user, password=args.password)
+        con = fdb.connect(args.path_to_db, user=args.user, password=args.password)
 
     print("Connected to ", con.database_name, ' via ', con.firebird_version, file=sys.stderr)
 
     cur = con.cursor()
 
-    df={}
+    df = {}
     dbf_path, dbf_name = os.path.split(args.path_to_db)
-    OUTDIR = Path( Path.cwd() / args.outdir )
+    OUTDIR = Path(Path.cwd() / args.outdir)
 
     if not Path(OUTDIR).exists():
         mkdirs(Path(OUTDIR / 'Files'))
 
     #show all tables
-    SQL='SELECT DISTINCT RDB$RELATION_NAME FROM RDB$RELATION_FIELDS WHERE RDB$SYSTEM_FLAG=0'
-    SQLTABLES=cur.execute(SQL)
-    Tables=SQLTABLES.fetchall()
-    Table = [ Tables[i][0].rstrip() for i in range(len(Tables)) ]
-    Fields={}
+    SQL = 'SELECT DISTINCT RDB$RELATION_NAME FROM RDB$RELATION_FIELDS WHERE RDB$SYSTEM_FLAG=0'
+    SQLTABLES = cur.execute(SQL)
+    Tables = SQLTABLES.fetchall()
+    Table = [Tables[i][0].rstrip() for i in range(len(Tables))]
+    Fields = {}
 
-    if args.limit: #Use subset in STable and SFields included from XYZ_slct.py 
+    if args.limit:  # Use subset in STable and SFields included from XYZ_slct.py 
         Table = STable
 
     for table in Table: 
         print("Table: ", table, file=sys.stderr)
 
         if args.limit:
-            Fields[table]=SFields[table]
+            Fields[table] = SFields[table]
         else:
             ALL_FIELDS_SQL="SELECT RDB$FIELD_NAME FROM RDB$RELATION_FIELDS\
                 WHERE RDB$RELATION_NAME=\'" + table  + "\'"
@@ -92,10 +93,7 @@ def main():
         dataQ = cur.execute(SQL)
         data = dataQ.fetchall()
         df[table] = pd.DataFrame(data, columns=Fields[table])
-        try:
-            df[table].reindex(index=Index) 
-        except:
-            print ("Error - can not reindex dataframe for table ", table)
+        df[table].reindex(index=Index) 
 
         fix_fields(table,df, args)
 

@@ -1,11 +1,12 @@
-#Run some queries on db employee.fdb
-import fdb,os,pytest
+# Run some queries on db employee.fdb
+import fdb
+import os
 
-DB='test/TEST.fdb' 
+DB = 'test/TEST.fdb'
 
 
 def test_sqlcreate():
-    
+
     if os.path.isfile(DB):
         print("Connecting to existing" + DB)
 
@@ -16,10 +17,6 @@ def test_sqlcreate():
 
         cur = con.cursor()
 
-        CT = """\
-if (not exists(select 1 from rdb$relations where rdb$relation_name = 'LANGUAGES')) then
-execute statement 'create table languages (name varchar(20),year_released integer)'
-"""
         con.commit()
 
     else:
@@ -27,23 +24,23 @@ execute statement 'create table languages (name varchar(20),year_released intege
 
         if os.getenv('GITHUB_ACTIONS'): # todo fixme
             con = fdb.create_database(database=DB, user='SYSDBA',
-                password='masterkey', fb_library_name='/opt/firebird/lib/libfbembed.so')
+            password='masterkey', fb_library_name='/opt/firebird/lib/libfbembed.so')
         else:
             con = fdb.create_database(database=DB, user='SYSDBA',
-                password='masterkey')
-        
+            password='masterkey')
+
         cur = con.cursor()
 
         cur.execute("create table languages ( name varchar(20), year_released integer)")
         con.commit()
-        
+
     cur.execute("insert into LANGUAGES (name, year_released) values ('C',        1972)")
     cur.execute("insert into languages (name, year_released) values ('Python',   1991)")
     con.commit()
 
     newLanguages = [
-    ('Lisp',  1958),
-    ('Dylan', 1995),
+        ('Lisp',  1958),
+        ('Dylan', 1995),
      ]
     
     cur.executemany("insert into languages (name, year_released) values (?, ?)", newLanguages)

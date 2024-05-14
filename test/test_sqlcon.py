@@ -1,12 +1,14 @@
-#Firebird-Export test opening database from file
+# Firebird-Export test opening database from file
 from pathlib import Path
 import fdb
 import os
 
 DBF = "/test/employee.fdb" 
+
+
 def test_sqlcon():
 
-    DB = str(Path.cwd()) + DBF 
+    DB = str(Path.cwd()) + DBF
 
     if os.getenv('GITHUB_ACTIONS'):
         con = fdb.connect(DB,
@@ -22,10 +24,9 @@ def test_sqlcon():
 
     Tables=TABLES.fetchall()
 
-    Table = [ Tables[i][0].rstrip() for i in range(len(Tables)) ]
+    Table = [Tables[i][0].rstrip() for i in range(len(Tables))]
 
     assert Table[3] == 'EMPLOYEE'
 
 
 test_sqlcon()
-

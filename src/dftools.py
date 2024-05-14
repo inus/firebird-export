@@ -1,19 +1,19 @@
-#Custom DF column cleaning
+# Custom DF column cleaning
 from utils import trim_javastr, trim_subj, decode_subj 
 import fdb, zipfile, re
 from io import BytesIO
-import pandas as pd
 from pathlib import Path
 
-PKZHDR=b'PK\x03\x04\x14\x00\x08\x00\x08\x00'
-PNGHDR=b'\x89PNG\r\n'
-PDFHDR=b'%PDF-1.'
-HTMLHDR=b'<HTML><HEAD>'
-JPGHDR=b'JFIF'
+PKZHDR = b'PK\x03\x04\x14\x00\x08\x00\x08\x00'
+PNGHDR = b'\x89PNG\r\n'
+PDFHDR = b'%PDF-1.'
+HTMLHDR = b'<HTML><HEAD>'
+JPGHDR = b'JFIF'
+
 
 def fix_fields(f, df, args):
 
-    if f == 'ADATTACHMENT' :
+    if f == 'ADATTACHMENT':
 
         for col in df[f].columns:
 
@@ -66,8 +66,8 @@ def fix_fields(f, df, args):
                             fp.write(blob)
                         row[col]= 'file://' + fpath
 
-    if f == 'ADMESSAGE' :
+    if f == 'ADMESSAGE':
         df[f]['ADBODY'] = df[f]['ADBODY'].apply(trim_javastr)
 
-    if f == 'ADCONTACT' :
+    if f == 'ADCONTACT':
         df[f]['ADEMAIL'] = df[f]['ADEMAIL'].apply(trim_javastr)

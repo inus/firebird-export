@@ -1,8 +1,8 @@
-#Firebird employee database
-#Specify subset of tables and fields 
-#to be exported
-#NOTE: employee.fdb errors on opening 
-#with charset utf-8
+# Firebird employee database
+# Specify subset of tables and fields 
+# to be exported
+# NOTE: employee.fdb errors on opening 
+# with charset utf-8
 '''
 Table:  COUNTRY
 Fields:  COUNTRY,CURRENCY

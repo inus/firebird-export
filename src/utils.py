@@ -1,14 +1,14 @@
 #utils
 import sys, fdb, os, zipfile
 from pathlib import Path
-#from utils import unzip 
+#from utils import unzip
 
-FB_EMP_DB_ZIP = 'test/employee-fdb.zip' 
-FB_EMP_DB     = 'test/employee.fdb' 
+FB_EMP_DB_ZIP = 'test/employee-fdb.zip'
+FB_EMP_DB     = 'test/employee.fdb'
 DBFILESIZE = 1114112
 
 def trim_javastr(s):
-    if type(s)== fdb.fbcore.BlobReader:
+    if type(s) == fdb.fbcore.BlobReader:
         return (s.read() ).decode()
     if s is not None:
         return s.decode('utf-8','ignore')[41::]
@@ -16,14 +16,14 @@ def trim_javastr(s):
         return ''
 
 def trim_subj(s):
-    return s.decode('utf-8','ignore')[::12]
+    return s.decode('utf-8', 'ignore')[::12]
 
 def decode_subj(s):
-    if s==None: return ''
-    if type(s)==fdb.fbcore.BlobReader:
+    if s is None: return ''
+    if type(s) == fdb.fbcore.BlobReader:
         return unzip(s)
-    if s=='': return s
-    return s.decode('utf-8','ignore')
+    if s == '': return s
+    return s.decode('utf-8', 'ignore')
 
 def mkdirs(p):
     if not Path(p).exists():
@@ -32,6 +32,7 @@ def mkdirs(p):
         except:
             print("Error creating output directory ",p , file=sys.stderr)
             exit(1)
+
 
 def unzip_testdb():
     def savezip(ZF,DestZF):
@@ -51,8 +52,9 @@ def unzip_testdb():
             os.rename(FB_EMP_DB, FB_EMP_DB + '.bak')
             savezip(FB_EMP_DB_ZIP, FB_EMP_DB)
 
+
 def unzip(Z):
-        zip = zipfile.ZipFile(Z) 
+        zip = zipfile.ZipFile(Z)
         for zipf in zip.namelist():
             data = zip.read(zipf)
         return data
