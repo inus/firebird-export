@@ -24,12 +24,9 @@ execute statement 'create table languages (name varchar(20),year_released intege
     else:
         print("Creating new" + DB)
 
-        if os.getenv('GITHUB_ACTIONS'):
-            con = fdb.create_database("create database 'test/TEST.fdb' \
-                                  fb_library_name='/opt/firebird/lib/libfbembed.so' ")
-        else:
+        if not os.getenv('GITHUB_ACTIONS'): # todo fixme
             con = fdb.create_database("create database 'test/TEST.fdb' ")
-
+        
         cur = con.cursor()
 
         cur.execute("create table languages ( name varchar(20), year_released integer)")
