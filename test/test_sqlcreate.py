@@ -25,7 +25,7 @@ execute statement 'create table languages (name varchar(20),year_released intege
         print("Creating new" + DB)
 
         if os.getenv('GITHUB_ACTIONS'): # todo fixme
-            exit(0)
+            pytest.exit('Skipping create database on Github Actions',returncode=0)
         else:
             con = fdb.create_database("create database 'test/TEST.fdb' ")
         
