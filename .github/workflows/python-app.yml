@@ -42,7 +42,7 @@ jobs:
       run: |
         pytest    
 
-    - name: Setup upterm session
-      if: ${{ failure }} 
+    - name: Setup lhotari ssh session
+      if: ${{ failure() }} 
       uses: lhotari/action-upterm@v1
 #      uses: mxschmitt/action-tmate@v3
