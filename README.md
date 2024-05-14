@@ -10,7 +10,7 @@ and index columns, optionally extract and save table data to
 
 ----
 ## Quick start
-You will need a python 3 installation with virtualenv and pip and a Firebase `.fdb` database file (or a working Firebase server). 
+You will need a python 3 installation with virtualenv and pip and a Firebird (Interbase compatible)  `.fdb` database file (or a working Firebase server). 
 
 ```git clone https://github.com/inus/firebird-export.git
 virtualenv .VENV311
