@@ -35,14 +35,13 @@ jobs:
         tar xzf buildroot.tar.gz 
         mv opt/firebird /opt
         popd
+        echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/firebird/lib" >> "$GITHUB_ENV"
         python -m pip install -U pip virtualenv
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-            
     - name: Test with pytest
       run: |
+        ./fb_export -h     
         pytest    
-
     - name: Setup lhotari ssh session
       if: ${{ failure() }} 
       uses: lhotari/action-upterm@v1
-#      uses: mxschmitt/action-tmate@v3
