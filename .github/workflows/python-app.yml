@@ -29,18 +29,20 @@ jobs:
         sudo apt update
         sudo apt-get update
         sudo apt-get -y install tmux vim libncurses5
-        wget https://github.com/FirebirdSQL/firebird/releases/download/R2_5_8/FirebirdCS-2.5.8.27089-0.amd64.tar.gz
+        wget -q https://github.com/FirebirdSQL/firebird/releases/download/R2_5_8/FirebirdCS-2.5.8.27089-0.amd64.tar.gz
         tar xzf FirebirdCS-2.5.8.27089-0.amd64.tar.gz
         cd FirebirdCS-2.5.8.27089-0.amd64
         tar xzf buildroot.tar.gz 
         mv opt/firebird /opt
-        python -m pip install --upgrade pip setuptools wheel virtualenv
+        cd
+        python -m pip install virtualenv pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        
-#    - name: Setup upterm session
-#      uses: lhotari/action-upterm@v1
-    
+            
     - name: Test with pytest
       run: |
         pytest    
 
+    - name: Setup upterm session
+      if: ${{ failure }} 
+      uses: lhotari/action-upterm@v1
+#      uses: mxschmitt/action-tmate@v3
