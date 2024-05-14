@@ -22,7 +22,11 @@ unzip_testdb()
 def main():
     args = get_args()
 
-    con=fdb.connect(args.path_to_db, user=args.user, password=args.password)
+    if os.getenv('GITHUB_ACTIONS'):
+        con = fdb.connect(args.path_to_db, user=args.user, password=args.password,
+                           fb_library_name='/opt/firebird/lib/libfbembed.so')
+    else:
+        con=fdb.connect(args.path_to_db, user=args.user, password=args.password)
 
     print("Connected to ", con.database_name, ' via ', con.firebird_version, file=sys.stderr)
 

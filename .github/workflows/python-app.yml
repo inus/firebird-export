@@ -26,7 +26,7 @@ jobs:
         cache: 'pip' 
     - name: Install dependencies
       run: |
-        sudo apt update
+        sudo apt -q update
         sudo apt-get -q update
         sudo apt-get -q -y install tmux vim libncurses5
         wget -q https://github.com/FirebirdSQL/firebird/releases/download/R2_5_8/FirebirdCS-2.5.8.27089-0.amd64.tar.gz
@@ -36,13 +36,15 @@ jobs:
         mv opt/firebird /opt
         popd
         echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/firebird/lib" >> "$GITHUB_ENV"
-        python -m pip install -U pip virtualenv
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: Test with pytest
+        python -m pip -q install -U pip virtualenv
+        if [ -f requirements.txt ]; then pip -q install -r requirements.txt; fi
+    - name: Unzip sample db
+      ./fb_export -h
+    - name: Export test json data
+      ./fb_export -d test/employee.fdb -e -o test/json       
+    - name: Run tests with pytest
       run: |
-        ./fb_export -h
-        ./fb_export -d test/employee.fdb -e -o test/json     
         pytest    
-    - name: Setup lhotari ssh session
+    - name: Setup lhotari ssh session on disaster
       if: ${{ failure() }} 
       uses: lhotari/action-upterm@v1
