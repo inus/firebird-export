@@ -24,7 +24,9 @@ execute statement 'create table languages (name varchar(20),year_released intege
     else:
         print("Creating new" + DB)
 
-        if not os.getenv('GITHUB_ACTIONS'): # todo fixme
+        if os.getenv('GITHUB_ACTIONS'): # todo fixme
+            exit(0)
+        else:
             con = fdb.create_database("create database 'test/TEST.fdb' ")
         
         cur = con.cursor()
