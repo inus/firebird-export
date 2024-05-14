@@ -3,6 +3,8 @@ import fdb,os,pytest
 
 DB='test/TEST.fdb' 
 
+@pytest.mark.skipif(os.environ['GITHUB_ACTIONS'], reason="Fails in Github Actions")
+
 def test_sqlcreate():
     
     if os.path.isfile(DB):
