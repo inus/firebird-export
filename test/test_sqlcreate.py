@@ -1,5 +1,5 @@
 #Run some queries on db employee.fdb
-import fdb,os
+import fdb,os,pytest
 
 DB='test/TEST.fdb' 
 
