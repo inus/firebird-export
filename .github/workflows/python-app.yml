@@ -27,15 +27,15 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt update
-        sudo apt-get update
-        sudo apt-get -y install tmux vim libncurses5
+        sudo apt-get -q update
+        sudo apt-get -q -y install tmux vim libncurses5
         wget -q https://github.com/FirebirdSQL/firebird/releases/download/R2_5_8/FirebirdCS-2.5.8.27089-0.amd64.tar.gz
         tar xzf FirebirdCS-2.5.8.27089-0.amd64.tar.gz
-        cd FirebirdCS-2.5.8.27089-0.amd64
+        pushd FirebirdCS-2.5.8.27089-0.amd64
         tar xzf buildroot.tar.gz 
         mv opt/firebird /opt
-        cd
-        python -m pip install virtualenv pytest
+        popd
+        python -m pip install -U pip virtualenv
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
             
     - name: Test with pytest
