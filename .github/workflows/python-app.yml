@@ -40,10 +40,10 @@ jobs:
         if [ -f requirements.txt ]; then pip -q install -r requirements.txt; fi
     - name: Unzip sample db
       run: |
-      ./fb_export -h
+        ./fb_export -h
     - name: Export test json data
       run: |
-      ./fb_export -d test/employee.fdb -e -o test/json       
+        ./fb_export -d test/employee.fdb -e -o test/json       
     - name: Run tests with pytest
       run: |
         pytest    
