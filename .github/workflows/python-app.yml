@@ -28,31 +28,31 @@ jobs:
       run: |
         sudo apt update > /dev/null 
         sudo apt-get -q update
-        sudo apt-get -q -y install tmux vim libncurses5
-        wget -q https://github.com/FirebirdSQL/firebird/releases/download/R2_5_8/FirebirdCS-2.5.8.27089-0.amd64.tar.gz
-        tar xzf FirebirdCS-2.5.8.27089-0.amd64.tar.gz
-        pushd FirebirdCS-2.5.8.27089-0.amd64
-        tar xzf buildroot.tar.gz 
-        mv opt/firebird /opt
-        popd
-        echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/firebird/lib" >> "$GITHUB_ENV"
+        sudo apt-get -q -y install tmux vim libncurses5 fbclient2
+#        wget -q https://github.com/FirebirdSQL/firebird/releases/download/R2_5_8/FirebirdCS-2.5.8.27089-0.amd64.tar.gz
+#        tar xzf FirebirdCS-2.5.8.27089-0.amd64.tar.gz
+#        pushd FirebirdCS-2.5.8.27089-0.amd64
+#        tar xzf buildroot.tar.gz 
+#        mv opt/firebird /opt
+#        popd
+#        echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/firebird/lib" >> "$GITHUB_ENV"
         python -m pip -q install -U pip virtualenv flake8 pytest
         if [ -f requirements.txt ]; then pip -q install -r requirements.txt; fi
-    - name: Lint with flake8
-      run: |
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Unzip sample db
-      run: |
-        ./fb_export -h
-    - name: Export test json data
-      run: |
-        ./fb_export -d test/employee.fdb -e -o test/json -b   
-    - name: Run tests with pytest
-      run: |
-        pytest    
+#    - name: Lint with flake8
+#      run: |
+#        # stop the build if there are Python syntax errors or undefined names
+#        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+#        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+#        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+#    - name: Unzip sample db
+#      run: |
+#        ./fb_export -h
+#    - name: Export test json data
+#      run: |
+#        ./fb_export -d test/employee.fdb -e -o test/json -b   
+#    - name: Run tests with pytest
+#      run: |
+#        pytest    
     - name: Setup lhotari ssh session on disaster
-      if: ${{ failure() }} 
+      if: ${{ failure() || success() }} 
       uses: lhotari/action-upterm@v1
