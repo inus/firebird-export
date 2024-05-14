@@ -2,7 +2,7 @@
 import fdb
 
 def test_sqlquery():
-      DB="./employee.fdb"
+      DB="test/employee.fdb"
       con=fdb.connect(DB)
       cur = con.cursor()
 
