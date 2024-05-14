@@ -26,10 +26,9 @@ jobs:
         cache: 'pip' 
     - name: Install dependencies
       run: |
-        apt update
-        apt-get update
-        apt-get -y install tmux vim libncurses5
-
+        sudo apt update
+        sudo apt-get update
+        sudo apt-get -y install tmux vim libncurses5
         wget https://github.com/FirebirdSQL/firebird/releases/download/R2_5_8/FirebirdCS-2.5.8.27089-0.amd64.tar.gz
         tar xzf FirebirdCS-2.5.8.27089-0.amd64.tar.gz
         cd FirebirdCS-2.5.8.27089-0.amd64
