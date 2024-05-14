@@ -20,11 +20,11 @@ def get_args():
     format = [ 'csv', 'json',] # 'excel', 'sql', 'hdf', 'pickle', 'html' ....]?
     parser.add_argument("-F", "--format", choices=format, default='csv', help="Export output format, default .CSV")
     parser.add_argument("-o", "--outdir", type=str, dest='outdir', default='Export', help="Output directory")
-    parser.add_argument("-u", "--user", type=str, default='SYSDBA', help="Firebase DB username")
-    parser.add_argument("-p", "--password", type=str, default='masterkey', help="Firebase DB password")
+    parser.add_argument("-u", "--user", type=str, default='SYSDBA', help="Firebird DB username")
+    parser.add_argument("-p", "--password", type=str, default='masterkey', help="Firebird DB password")
 
     parser.add_argument("-d", "--database", dest='path_to_db', type=str, required=True, 
-                        default="tests/employee.fdb", help="Firebase server alias or database name (eg. employee) or full path if file, eg ./employee.fdb")
+                        default="tests/employee.fdb", help="Firebird server alias or database name (eg. employee) or full path if file, eg ./employee.fdb")
 
     args = parser.parse_args()
     return args
