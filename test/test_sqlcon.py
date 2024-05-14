@@ -1,13 +1,18 @@
 #Firebird-Export test opening database from file
 from pathlib import Path
 import fdb
+import os
 
-
+DBF = "/test/employee.fdb" 
 def test_sqlcon():
 
-    DB = str(Path.cwd()) +  "/test/employee.fdb" 
+    DB = str(Path.cwd()) + DBF 
 
-    con = fdb.connect(DB) #, user='SYSDBA')
+    if os.getenv('GITHUB_ACTIONS'):
+        con = fdb.connect(DB,
+            fb_library_name='/opt/firebird/lib/libfbembed.so')
+    else:
+        con = fdb.connect(DB)
 
     cur = con.cursor()
 

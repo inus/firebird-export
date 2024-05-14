@@ -1,13 +1,17 @@
 #Run some queries on db employee.fdb
 import fdb
+import os
 
 def test_sqlquery():
       DB="test/employee.fdb"
-      con=fdb.connect(DB)
+      if os.getenv('GITHUB_ACTIONS'):
+            con = fdb.connect('test/employee.fdb',
+                         fb_library_name='/opt/firebird/lib/libfbembed.so')
+      else:
+            con = fdb.connect('test/employee.fdb')
       cur = con.cursor()
 
       SQL='SELECT DISTINCT RDB$RELATION_NAME FROM RDB$RELATION_FIELDS'
-      #SQL='SELECT DISTINCT RDB$RELATION_NAME FROM RDB$RELATION_FIELDS WHERE RDB$SYSTEM_FLAG=0'
 
       SQLTABLES=cur.execute(SQL)
       Tables=SQLTABLES.fetchall()
@@ -24,11 +28,6 @@ def test_sqlquery():
             SQL="SELECT RDB$FIELD_NAME FROM RDB$RELATION_FIELDS\
                 WHERE RDB$RELATION_NAME=\'" + table  + "\'"
             Field = cur.execute(SQL).fetchall()    
-            #Fields[table] = [ Field[i][0].rstrip() for i in range(len(Field)) ]
-
-      #print("Fields: ", ','.join(Fields[table]), file=sys.stderr)
-      #print("Field count: ", len(Fields[table]), file=sys.stderr)
-
 
       OUT=cur.execute(SQL)
       Fields=OUT.fetchall()

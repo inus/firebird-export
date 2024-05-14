@@ -20,20 +20,28 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python 3.10
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v5
       with:
         python-version: "3.10"
+        cache: 'pip' 
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install flake8 pytest
+        apt update
+        apt-get update
+        apt-get -y install tmux vim libncurses5
+
+        wget https://github.com/FirebirdSQL/firebird/releases/download/R2_5_8/FirebirdCS-2.5.8.27089-0.amd64.tar.gz
+        tar xzf FirebirdCS-2.5.8.27089-0.amd64.tar.gz
+        cd FirebirdCS-2.5.8.27089-0.amd64
+        tar xzf buildroot.tar.gz 
+        mv opt/firebird /opt
+        python -m pip install --upgrade pip setuptools wheel virtualenv
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: Lint with flake8
-      run: |
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+        
+#    - name: Setup upterm session
+#      uses: lhotari/action-upterm@v1
+    
     - name: Test with pytest
       run: |
-        pytest
+        pytest    
+

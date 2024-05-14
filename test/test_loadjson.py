@@ -31,20 +31,6 @@ def test_loadjson():
 
         assert df.iloc[0][4] ==  668044800000
 
-    #Test saving to CSV
-
-    #df=df.to_csv()
-
-    #SAVECSV='./test/json/csv/' + employee.csv'
-
-    #with open(SAVECSV, 'w') as fp:
-#        fp.write(df)
-
-    #print('Saved json to CSV file', './export/JSON/app_json_test_read.csv')
-
-    #assert os.path.isfile(SAVECSV) == True
-
-    #assert os.path.getsize(SAVECSV) == 3293
 
 test_loadjson()
 

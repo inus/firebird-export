@@ -7,7 +7,11 @@ def test_sqlcreate():
     
     if os.path.isfile(DB):
         print("Connecting to existing" + DB)
-        con = fdb.connect(DB, user='SYSDBA', password='masterkey')
+
+        if os.environ['GITHUB_ACTIONS']:
+            con = fdb.connect(DB, fb_library_name='/opt/firebird/lib/libfbembed.so')
+        else:
+            con = fdb.connect(DB) 
 
         cur = con.cursor()
 
@@ -20,17 +24,17 @@ execute statement 'create table languages (name varchar(20),year_released intege
     else:
         print("Creating new" + DB)
 
-        con = fdb.create_database("create database 'test/TEST.fdb' \
-                                  user 'SYSDBA' password 'masterkey'")
-        
+        if os.getenv('GITHUB_ACTIONS'):
+            con = fdb.create_database("create database 'test/TEST.fdb' \
+                                  fb_library_name='/opt/firebird/lib/libfbembed.so' ")
+        else:
+            con = fdb.create_database("create database 'test/TEST.fdb' ")
+
         cur = con.cursor()
 
         cur.execute("create table languages ( name varchar(20), year_released integer)")
         con.commit()
-    
-
-    #print(cur.execute("select * from languages ").fetchall())
-    
+        
     cur.execute("insert into LANGUAGES (name, year_released) values ('C',        1972)")
     cur.execute("insert into languages (name, year_released) values ('Python',   1991)")
     con.commit()

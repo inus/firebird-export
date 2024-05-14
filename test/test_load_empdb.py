@@ -2,9 +2,9 @@ from pathlib import Path
 import pandas as pd
 import sys
 import subprocess
+# Test load json as generated
 
 JSON_TESTFILE=Path( Path.cwd() / 'test' / 'employee.json')
-TIMEOUT=30
 
 def test_load_json_empdb():
 
@@ -12,7 +12,7 @@ def test_load_json_empdb():
     if not p.exists():
         EXPORT_CMD = Path( Path.cwd() / "fb_export")
         EXPORT_DIR  = 'test/json'
-        args = "-d test/employee.fdb  -F json -c -e -o test" # + EXPORT_DIR
+        args = "-d test/employee.fdb  -F json -c -e -o test -u SYSDBA -p masterkey"
         process = subprocess.run([EXPORT_CMD, args]), 
         if process[0].returncode != 0:
             print("Can not find or generate test JSON file to load:" , p)
