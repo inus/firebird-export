@@ -4,7 +4,6 @@ import fdb,os,pytest
 DB='test/TEST.fdb' 
 
 
-@pytest.mark.skipif('GITHUB_ACTIONS' in os.environ, reason="Fails in Github Actions")
 def test_sqlcreate():
     
     if os.path.isfile(DB):
@@ -27,10 +26,11 @@ execute statement 'create table languages (name varchar(20),year_released intege
         print("Creating new" + DB)
 
         if os.getenv('GITHUB_ACTIONS'): # todo fixme
-            con = fdb.create_database(database='test/TEST.fdb', 
-                        fb_library_name='/opt/firebird/lib/libfbembed.so')
+            con = fdb.create_database(database=DB, user='SYSDBA',
+                password='masterkey', fb_library_name='/opt/firebird/lib/libfbembed.so')
         else:
-            con = fdb.create_database("create database 'test/TEST.fdb' ")
+            con = fdb.create_database(database=DB, user='SYSDBA',
+                password='masterkey')
         
         cur = con.cursor()
 
