@@ -10,7 +10,7 @@ and index columns, optionally extract and save table data to
 
 ----
 ## Quick start
-You will need a python 3 installation with virtualenv and pip and a Firebird (Interbase compatible)  `.fdb` database file (or a working Firebase server). 
+You will need a python 3 installation with virtualenv and pip and a Firebird (Interbase compatible)  `.fdb` database file (or a working Firebird server). 
 
 ```git clone https://github.com/inus/firebird-export.git
 virtualenv .VENV311
@@ -22,7 +22,7 @@ fb_export -d test/employee.fdb
 
 
 ### Run:
-  1. View database table and field names and datatypes, from Firebase database alias
+  1. View database table and field names and datatypes, from Firebird database alias
   ```
   ./fb_export -d employee 
 ```
@@ -71,11 +71,12 @@ options:
                         Export output format
   -o OUTDIR, --outdir OUTDIR
                         Output directory
-  -u USER, --user USER  Firebase DB username
+  -u USER, --user USER  Firebird DB username
   -p PASSWORD, --password PASSWORD
-                        Firebase DB password
+                        Firebird DB password
   -d PATH_TO_DB, --database PATH_TO_DB
-                        Firebase server alias or database name (eg. employee) or full path if file, eg ./employee.fdb
+                        Firebird server alias or database name
+                         (eg. employee) or full path if a file, eg ./employee.fdb
 
 ```
 
@@ -85,5 +86,6 @@ options:
 
 ### Test:
   pytest
+  
 
 [^1]: Firebird is a trademark of https://firebirdsql.org/ and is used under the 'fair use' case, https://firebirdsql.org/en/firebird-brand-faq 
