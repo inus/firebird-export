@@ -107,7 +107,7 @@ options:
 This has been written with a with Firebird 2.5 testing with database file.
 However, I have also verified that the python code works with a Firebird 3,
 installation. FB3 and FB2.5 has incompatible on-disk file structures for the 
-databases. Using the fdb python library, one could load a 2.5 database, by
+databases. Using the fdb python library, one could load a 2.5 or 3.0 database, by
 pointing to the appropriate 2.5 or 3.0 fbclient.so library file. In this
 way one could enable loading both the 2.5 and the 3.0 and up versions of 
 Firebird databases in the same python code for comparison and/or transfer.
