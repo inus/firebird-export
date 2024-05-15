@@ -96,18 +96,28 @@ options:
 ```
 
 ### Build a distribution tar.gz: 
+
+```
   pip install build
   build -m 
-
+```
 
 ## Note: Firebird 2.5 and 3+ versions
 
-This has mainly been tested with Firebird 2.5 but also tested to work with Firebird 3, which
-has incompatible on-disk file structures. One could specify the library to possible enable loading 
-both versions of data in the same python code.
+This has been written with a with Firebird 2.5 testing with database file.
+However, I have also verified that the python code works with a Firebird 3,
+installation. FB3 and FB2.5 has incompatible on-disk file structures for the 
+databases. Using the fdb python library, one could load a 2.5 database, by
+pointing to the appropriate 2.5 or 3.0 fbclient.so library file. In this
+way one could enable loading both the 2.5 and the 3.0 and up versions of 
+Firebird databases in the same python code for comparison and/or transfer.
 
 ### Test:
-  pytest
-  
+  `pytest`
+
+## Using Github Actions
+
+Firebird-export has been tested with Github Actions, 
+see `.github/workflows.python-app.yml` in the repo.
 
 [^1]: Firebird is a trademark of https://firebirdsql.org/ and is used under the 'fair use' case, https://firebirdsql.org/en/firebird-brand-faq 
