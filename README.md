@@ -22,35 +22,50 @@ fb_export -d test/employee.fdb
 
 
 ### Run:
-  1. View database table and field names and datatypes, from Firebird database alias
+   View database table and field names and datatypes, from Firebird database file
   ```
-  ./fb_export -d employee 
+  ./fb_export -d test/employee.fdb
 ```
-2. View brief info
+
+   View database table and field names and datatypes, from database alias name,
+   assumes there is a Firebird installation on the local machine with example data.
+
+  ```
+  ./fb_export -d employee
+  ```
+ 
+ View brief information, table and field only, no data types
 ```
-./fb_export -d employee  -b
+./fb_export -d test/employee.fdb -b
 ```
-3. Export everything from database file to directory "Export" as CSV 
+ Export from database file to directory "Export" as CSV in separate files, one per table
 ```
 ./fb_export -d  test/employee.fdb -e -o Export
 ```
-4. Export only files and tables listed in  src/limit_sql.py to a maximum of 100 records
+ Test export of only the tables and fields listed in src/limit_sql.py, to a maximum of 100 records
 ```
 ./fb_export -d test/employee.fdb -l -m 100
 ```
-5. Also view a number (5) of sample records
-from the employee database (without exporting)
+ Test export, and also view a number (5) of sample records
+from the employee database (without saving)
 ```
 ./fb_export -d test/employee.fdb -s -n 5 
 ```
-To recreate the test JSON file 
+Create a combined JSON export file
 ```
 ./fb_export  -d test/employee.fdb  -F json -e -o test/json -c 
 ```
 
+Capture the database summary info to file (bash)
+```
+./fb_export -d  test/employee.fdb  -b &>  tmp/fdb_info.txt
+./fb_export -d  test/employee.fdb   &>  tmp/fdb_more_info.txt
+```
+
+
 ## Usage
 
-```src/fb_export.py -h
+```src/fb_export.py -h  (or ./fb_export )
 usage: fb_export.py [-h] [--version] [-e] [-b] [-l] [-m MAXROWS] [-s] [-n NUMSAMPLES] [-c] [-F {csv,json}] [-o OUTDIR] [-u USER] [-p PASSWORD] -d PATH_TO_DB
 
 Firebird export
@@ -83,6 +98,13 @@ options:
 ### Build a distribution tar.gz: 
   pip install build
   build -m 
+
+
+## Note: Firebird 2.5 and 3+ versions
+
+This has mainly been tested with Firebird 2.5 but also tested to work with Firebird 3, which
+has incompatible on-disk file structures. One could specify the library to possible enable loading 
+both versions of data in the same python code.
 
 ### Test:
   pytest
