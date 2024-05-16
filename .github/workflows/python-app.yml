@@ -42,7 +42,7 @@ jobs:
         src/fb_export.py  test/employee.fdb
     - name: Export test json data
       run: |
-        src/fb_export.py -d test/employee.fdb -e -o test/json       
+        src/fb_export.py test/employee.fdb -e -o test/json       
     - name: Run tests with pytest
       run: |
         pytest    
@@ -53,6 +53,6 @@ jobs:
       run: |
         pip install dist/fb_export-0.2.0-py3-none-any.whl
         fb_export test/employee.fdb 
-    - name: Setup lhotari ssh session on disaster
-      if: ${{ failure() }} 
-      uses: lhotari/action-upterm@v1
+#    - name: Setup lhotari ssh session on disaster
+#      if: ${{ failure() }} 
+#      uses: lhotari/action-upterm@v1
