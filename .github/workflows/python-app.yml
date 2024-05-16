@@ -35,7 +35,7 @@ jobs:
         mv opt/firebird /opt
         popd
         echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/firebird/lib" >> "$GITHUB_ENV"
-        python -m pip -q install -U pip virtualenv
+        python -m pip -q install -U pip virtualenv build
         if [ -f requirements.txt ]; then pip -q install -r requirements.txt; fi
     - name: Unzip sample db
       run: |
@@ -46,10 +46,14 @@ jobs:
     - name: Build dist
       run: |
         python -m build
-#    - name: Test dist
-#      run: |
-#        pip install dist/fb_export-0.2.0-py3-none-any.whl
-#        fb_export test/employee.fdb 
+    - name: Test dist
+      run: |
+        pip install dist/fb_export-0.2.0-py3-none-any.whl
+        fb_export test/employee.fdb 
+    - name: Test usage from python
+      run: |
+        echo 'import fb_export.fb_export as fb; fb.main("test/employee.fdb","-b")' > test.py
+        python test.py test/employee.fdb
     - name: Setup lhotari ssh session on disaster
       if: ${{ failure() }} 
       uses: lhotari/action-upterm@v1
