@@ -33,6 +33,6 @@ def get_args(*fbe_args):
     if len(fbe_args) == 0: # Command line 
         args = parser.parse_args()
     else:  # From module 
-        args = parser.parse_args( fbe_args[0])
+        args = parser.parse_args( fbe_args)
 
     return args
