@@ -145,4 +145,5 @@ def main(*fbe_arg):
     rmtree('/tmp/firebird')
 
 if __name__ == '__main__':
-    main()
+    sys.argv.pop(0)
+    main( ''.join(sys.argv))
