@@ -28,9 +28,33 @@ jobs:
       run: |
         sudo apt update > /dev/null 
         sudo apt-get -q update
-        sudo apt-get -q -y install tmux vim libncurses5 fbclient2
-        python -m pip -q install -U pip virtualenv flake8 pytest
+        sudo apt-get -q -y install tmux vim libncurses5 
+        python -m pip -q install -U pip virtualenv flake8 pytest build
+        wget -q https://github.com/FirebirdSQL/firebird/releases/download/R2_5_8/FirebirdCS-2.5.8.27089-0.amd64.tar.gz
+        tar xzf FirebirdCS-2.5.8.27089-0.amd64.tar.gz
+        pushd FirebirdCS-2.5.8.27089-0.amd64
+        tar xzf buildroot.tar.gz 
+        mv opt/firebird /opt
+        popd
+        echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/firebird/lib" >> "$GITHUB_ENV"
+        python -m pip -q install -U pip virtualenv
         if [ -f requirements.txt ]; then pip -q install -r requirements.txt; fi
+    - name: Unzip sample db
+      run: |
+        src/fb_export.py -h
+    - name: Export test json data
+      run: |
+        src/fb_export.py -d test/employee.fdb -e -o test/json       
+    - name: Run tests with pytest
+      run: |
+        pytest    
+    - name: Build dist
+      run: |
+        python -m build
+    - name: Test dist
+      run: |
+        pip install dist/fb_export-0.2.0-py3-none-any.whl
+        fb_export test/employee.fdb 
     - name: Setup lhotari ssh session on disaster
-      if: ${{ failure() || success() }} 
+      if: ${{ failure() }} 
       uses: lhotari/action-upterm@v1
