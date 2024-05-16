@@ -1,13 +1,21 @@
 #!/usr/bin/env python3
 # Dump firebase data
 
+
+
 import fdb
 from shutil import rmtree
 import pandas as pd
 import sys
 import os
 from pathlib import Path
+
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.dirname(SCRIPT_DIR))
+
+
 from args import get_args
+#import .args
 from dftools import fix_fields
 from utils import mkdirs
 
@@ -20,9 +28,8 @@ from utils import unzip_testdb
 unzip_testdb()
 
 
-def main():
+def main(*arg):
     args = get_args()
-
     if os.getenv('GITHUB_ACTIONS'):
         con = fdb.connect(args.path_to_db, user=args.user, password=args.password,
                 fb_library_name='/opt/firebird/lib/libfbembed.so')
@@ -140,4 +147,4 @@ def main():
     rmtree('/tmp/firebird')
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv)

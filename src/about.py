@@ -1,3 +1,3 @@
 # about.py
-VERSION = "0.0.1"
-DATE = '2024-05-10'
+VERSION = "0.2.0"
+DATE = '2024-05-16'
