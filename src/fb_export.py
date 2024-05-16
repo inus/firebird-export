@@ -146,4 +146,4 @@ def main(*fbe_arg):
 
 if __name__ == '__main__':
     sys.argv.pop(0)
-    main( ''.join(sys.argv))
+    main( ' '.join(sys.argv))
