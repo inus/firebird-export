@@ -17,81 +17,86 @@ virtualenv .VENV311
 . .VENV311/bin/activate
 pip install -r requirements.txt
 pytest
-fb_export -d test/employee.fdb
+src/fb_export.py test/employee.fdb
 ```
 
+Alternatively, the package can be built and installed, preferably in a virtual environment, to make the `fb_export` command 
+available in the path.
 
 ### Run:
    View database table and field names and datatypes, from Firebird database file
   ```
-  ./fb_export -d test/employee.fdb
+  ./fb_export test/employee.fdb
 ```
 
    View database table and field names and datatypes, from database alias name,
    assumes there is a Firebird installation on the local machine with example data.
 
   ```
-  ./fb_export -d employee
+  src/fb_export.py  employee
   ```
  
  View brief information, table and field only, no data types
 ```
-./fb_export -d test/employee.fdb -b
+src/fb_export.py -b test/employee.fdb
 ```
  Export from database file to directory "Export" as CSV in separate files, one per table
 ```
-./fb_export -d  test/employee.fdb -e -o Export
+src/fb_export.py test/employee.fdb -e -o Export
 ```
- Test export of only the tables and fields listed in src/limit_sql.py, to a maximum of 100 records
+ Test export of only the tables and fields listed in src/limit_sql.py, to a maximum of 10 records
 ```
-./fb_export -d test/employee.fdb -l -m 100
+src/fb_export.py test/employee.fdb -l -m 10
 ```
  Test export, and also view a number (5) of sample records
 from the employee database (without saving)
 ```
-./fb_export -d test/employee.fdb -s -n 5 
+src/fb_export.py -s -n 5 test/employee.fdb
 ```
 Create a combined JSON export file
 ```
-./fb_export  -d test/employee.fdb  -F json -e -o test/json -c 
+src/fb_export.py test/employee.fdb  -F json -e -o test/json -c 
 ```
 
 Capture the database summary info to file (bash)
 ```
-./fb_export -d  test/employee.fdb  -b &>  tmp/fdb_info.txt
-./fb_export -d  test/employee.fdb   &>  tmp/fdb_more_info.txt
+src/fb_export.py test/employee.fdb  -b &>  tmp/fdb_info.txt
+src/fb_export.py  test/employee.fdb   &>  tmp/fdb_more_info.txt
 ```
 
 
 ## Usage
 
-```src/fb_export.py -h  (or ./fb_export )
-usage: fb_export.py [-h] [--version] [-e] [-b] [-l] [-m MAXROWS] [-s] [-n NUMSAMPLES] [-c] [-F {csv,json}] [-o OUTDIR] [-u USER] [-p PASSWORD] -d PATH_TO_DB
+```
+src/fb_export.py -h
+usage: fb_export.py [-h] [--version] [-e] [-b] [-l] [-m MAXROWS] [-s] [-n NUMSAMPLES] [-j] [-F {csv,json}] [-o OUTDIR] [-u USER] [-p PASSWORD] path_to_db
 
 Firebird export
+
+positional arguments:
+  path_to_db            Firebird server alias or database name (eg. employee) or path to database file, eg ./employee.fdb
 
 options:
   -h, --help            show this help message and exit
   --version             show program's version number and exit
   -e, --export          Export data
-  -b, --brief
-  -l, --limit           Limit tables and fields to those in customselect.py
+  -b, --brief           Shorter info
+  -l, --limit           Limit tables and fields to those in limit_sql.py
   -m MAXROWS, --maxrows MAXROWS
-                        Max number of rows returned in export
-  -s, --sampledata      Also show sample record
+                        Max number of rows to export
+  -s, --sampledata      Also show sample data records
   -n NUMSAMPLES, --numsamples NUMSAMPLES
                         number of sample rows
-  -c, --combine         Combine output into a single file
+  -j, --join            Join output files
   -F {csv,json}, --format {csv,json}
-                        Export output format
+                        Export output format, default .CSV
   -o OUTDIR, --outdir OUTDIR
                         Output directory
   -u USER, --user USER  Firebird DB username
   -p PASSWORD, --password PASSWORD
                         Firebird DB password
-  -d PATH_TO_DB, --database PATH_TO_DB
-                        Firebird server alias or database name
-                         (eg. employee) or full path if a file, eg ./employee.fdb
+
+
 
 ```
 
@@ -99,25 +104,60 @@ options:
 
 ```
   pip install build
-  build -m 
+  python -m build
 ```
+
+The .whl file in the `dist` directory can then be installed with pip,
+the command `fb_export` should then be available in the virtual env.
+
+```
+pip install dist/fb_export-0.2.0-py3-none-any.whl
+```
+
+
 
 ## Note: Firebird 2.5 and 3+ versions
 
-This has been written with a with Firebird 2.5 testing with database file.
-However, I have also verified that the python code works with a Firebird 3,
-installation. FB3 and FB2.5 has incompatible on-disk file structures for the 
-databases. Using the fdb python library, one could load a 2.5 or 3.0 database, by
+The code has been tested with a with Firebird 2.5 database file.
+
+However, I have also verified that the same  code works with a Firebird 3
+installation. FB3 and FB2.5 have incompatible on-disk file structures for the 
+database files but using the fdb python library, one could load a 2.5 or 3.0 database by
 pointing to the appropriate 2.5 or 3.0 fbclient.so library file. In this
 way one could enable loading both the 2.5 and the 3.0 and up versions of 
 Firebird databases in the same python code for comparison and/or transfer.
 
 ### Test:
+
+To run the tests in `test/` use
+
   `pytest`
+
+### Calling fb_export from python
+
+Example:
+
+```
+# Test opening Firebase database from python
+import fb_export.fb_export as fb
+fb.main("test/employee.fdb","-b")'
+```
+To run:
+
+`python test_fb.py test/employee.fdb`
+
+
 
 ## Using Github Actions
 
 Firebird-export has been tested with Github Actions, 
 see `.github/workflows.python-app.yml` in the repo.
+
+To run and test the workflow on a local runner, install Docker desktop and act, 
+then invoke:
+
+`act -j build`
+
+On failure, an SSH session will be opened to be able to debug and the key will be printed to the terminal. Either close the session when done or `touch continue` to let the workflow proceed.
 
 [^1]: Firebird is a trademark of https://firebirdsql.org/ and is used under the 'fair use' case, https://firebirdsql.org/en/firebird-brand-faq 
