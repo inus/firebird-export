@@ -3,12 +3,12 @@ requires = ["setuptools",]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "firebird-export"
+name = "fb_export"
 authors = [
     {name = "Inus Scheepers", email = "In.uS.sc@gmail.com"}
 ]
 description = "Export Firebird database to CSV, JSON or other pandas format from dataframe"
-version = "0.1.0"
+dynamic = ["version"]
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
@@ -49,15 +49,11 @@ classifiers = [
     "Topic :: File Formats",
 ]
 
-[project.scripts]
-firebird-export = "fb_export"
-
 [project.urls]
 Homepage = "https://github.com/inus/firebird-export"
-#Documentation = "https://readthedocs.org"
-#Repository = "https://github.com/me/spam.git"
-#Issues = "https://github.com/me/spam/issues"
-#Changelog = "https://github.com/me/spam/blob/master/CHANGELOG.md"
+Repository = "https://github.com/inus/firebird-export.git"
+Issues = "https://github.com/inus/firebird-export/issues"
+Changelog = "https://github.com/inus/firebird-export/CHANGELOG.md"
 
 [tool.pytest.ini_options]
 testpaths =  "test"
@@ -70,3 +66,11 @@ log_date_format = "%Y-%m-%d %H:%M:%S"
 #filterwarnings = "ignore"
 #norecursedirs = docs build
 
+[project.scripts]
+fb_export = "fb_export.fb_export:main"
+
+[tool.setuptools]
+package-dir = {"fb_export" = "src"}
+
+[tool.setuptools.dynamic]
+version = {attr = "fb_export.about.VERSION"}
