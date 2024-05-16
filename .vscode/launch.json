@@ -11,7 +11,7 @@
             "program": "src/fb_export.py",  //"${file}",
             "console": "integratedTerminal",
             "justMyCode": true,
-            "args":  [  //"test/employee.fdb", // "-e", // "-c", // "-l", //"-m 10", // "-u", "SYSDBA", "-p", "masterkey",
+            "args":  [  "test/employee.fdb", // "-e", // "-c", // "-l", //"-m 10", // "-u", "SYSDBA", "-p", "masterkey",
                        // "-o" , "OutDir", // "-F", "json"
                      ] ,
         },],

@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-# Dump firebase data
-
-
+# Export Firebird database contents to CSV
 
 import fdb
 from shutil import rmtree
@@ -28,13 +26,13 @@ from utils import unzip_testdb
 unzip_testdb()
 
 
-def main(*arg):
-    args = get_args()
+def main(*fbe_arg):
+    args = get_args(fbe_arg)
     if os.getenv('GITHUB_ACTIONS'):
         con = fdb.connect(args.path_to_db, user=args.user, password=args.password,
                 fb_library_name='/opt/firebird/lib/libfbembed.so')
     else:
-        con = fdb.connect(args.path_to_db, user=args.user, password=args.password)
+        con = fdb.connect(args.path_to_db)
 
     print("Connected to ", con.database_name, ' via ', con.firebird_version, file=sys.stderr)
 
@@ -129,7 +127,7 @@ def main(*arg):
                 except:
                     print("Error converting DF to json: " + table, file=sys.stderr)
 
-            if args.combine:
+            if args.join:
                 filename = dbf_name.rstrip('.fdb') + '.' + args.format 
                 fmode = 'a'
             else:
@@ -147,4 +145,4 @@ def main(*arg):
     rmtree('/tmp/firebird')
 
 if __name__ == '__main__':
-    main(sys.argv)
+    main()
