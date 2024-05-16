@@ -138,14 +138,13 @@ To run the tests in `test/` use
 Example:
 
 ```
-# Test opening Firebase database from python
+# Test opening Firebase database for brief info, from python
 import fb_export.fb_export as fb
-fb.main("test/employee.fdb","-b")'
+fb.main("test/employee.fdb","-b")
 ```
 To run:
 
-`python test_fb.py test/employee.fdb`
-
+`python test_fb.py`
 
 
 ## Using Github Actions
