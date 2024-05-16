@@ -13,7 +13,6 @@ sys.path.append(os.path.dirname(SCRIPT_DIR))
 
 
 from args import get_args
-#import .args
 from dftools import fix_fields
 from utils import mkdirs
 
@@ -27,7 +26,7 @@ unzip_testdb()
 
 
 def main(*fbe_arg):
-    args = get_args(fbe_arg)
+    args = get_args(*fbe_arg)
     if os.getenv('GITHUB_ACTIONS'):
         con = fdb.connect(args.path_to_db, user=args.user, password=args.password,
                 fb_library_name='/opt/firebird/lib/libfbembed.so')
@@ -145,5 +144,5 @@ def main(*fbe_arg):
     rmtree('/tmp/firebird')
 
 if __name__ == '__main__':
-    sys.argv.pop(0)
-    main( ''.join(sys.argv))
+    main() 
+

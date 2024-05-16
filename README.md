@@ -22,35 +22,50 @@ fb_export -d test/employee.fdb
 
 
 ### Run:
-  1. View database table and field names and datatypes, from Firebird database alias
+   View database table and field names and datatypes, from Firebird database file
   ```
-  ./fb_export -d employee 
+  ./fb_export -d test/employee.fdb
 ```
-2. View brief info
+
+   View database table and field names and datatypes, from database alias name,
+   assumes there is a Firebird installation on the local machine with example data.
+
+  ```
+  ./fb_export -d employee
+  ```
+ 
+ View brief information, table and field only, no data types
 ```
-./fb_export -d employee  -b
+./fb_export -d test/employee.fdb -b
 ```
-3. Export everything from database file to directory "Export" as CSV 
+ Export from database file to directory "Export" as CSV in separate files, one per table
 ```
 ./fb_export -d  test/employee.fdb -e -o Export
 ```
-4. Export only files and tables listed in  src/limit_sql.py to a maximum of 100 records
+ Test export of only the tables and fields listed in src/limit_sql.py, to a maximum of 100 records
 ```
 ./fb_export -d test/employee.fdb -l -m 100
 ```
-5. Also view a number (5) of sample records
-from the employee database (without exporting)
+ Test export, and also view a number (5) of sample records
+from the employee database (without saving)
 ```
 ./fb_export -d test/employee.fdb -s -n 5 
 ```
-To recreate the test JSON file 
+Create a combined JSON export file
 ```
 ./fb_export  -d test/employee.fdb  -F json -e -o test/json -c 
 ```
 
+Capture the database summary info to file (bash)
+```
+./fb_export -d  test/employee.fdb  -b &>  tmp/fdb_info.txt
+./fb_export -d  test/employee.fdb   &>  tmp/fdb_more_info.txt
+```
+
+
 ## Usage
 
-```src/fb_export.py -h
+```src/fb_export.py -h  (or ./fb_export )
 usage: fb_export.py [-h] [--version] [-e] [-b] [-l] [-m MAXROWS] [-s] [-n NUMSAMPLES] [-c] [-F {csv,json}] [-o OUTDIR] [-u USER] [-p PASSWORD] -d PATH_TO_DB
 
 Firebird export
@@ -81,11 +96,28 @@ options:
 ```
 
 ### Build a distribution tar.gz: 
+
+```
   pip install build
   build -m 
+```
+
+## Note: Firebird 2.5 and 3+ versions
+
+This has been written with a with Firebird 2.5 testing with database file.
+However, I have also verified that the python code works with a Firebird 3,
+installation. FB3 and FB2.5 has incompatible on-disk file structures for the 
+databases. Using the fdb python library, one could load a 2.5 or 3.0 database, by
+pointing to the appropriate 2.5 or 3.0 fbclient.so library file. In this
+way one could enable loading both the 2.5 and the 3.0 and up versions of 
+Firebird databases in the same python code for comparison and/or transfer.
 
 ### Test:
-  pytest
-  
+  `pytest`
+
+## Using Github Actions
+
+Firebird-export has been tested with Github Actions, 
+see `.github/workflows.python-app.yml` in the repo.
 
 [^1]: Firebird is a trademark of https://firebirdsql.org/ and is used under the 'fair use' case, https://firebirdsql.org/en/firebird-brand-faq 
