@@ -39,7 +39,7 @@ jobs:
         if [ -f requirements.txt ]; then pip -q install -r requirements.txt; fi
     - name: Unzip sample db
       run: |
-        src/fb_export.py -h
+        src/fb_export.py  test/employee.fdb
     - name: Export test json data
       run: |
         src/fb_export.py -d test/employee.fdb -e -o test/json       
