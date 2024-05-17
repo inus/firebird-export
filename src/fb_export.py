@@ -3,8 +3,8 @@
 
 import fdb
 from shutil import rmtree
-import pandas as pd
-#import polars as pd
+#import pandas as pd
+import polars as pd
 import sys
 import os
 from pathlib import Path
