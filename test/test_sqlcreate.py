@@ -2,18 +2,18 @@
 import fdb
 import os
 
-DB = 'test/TEST.fdb'
+DB = 'test/test123.fdb'
 
 
 def test_sqlcreate():
 
     if os.path.isfile(DB):
-        print("Connecting to existing" + DB)
+        print("Connecting to existing " + DB)
 
-        if os.environ['GITHUB_ACTIONS']:
+        if 'GITHUB_ACTIONS' in os.environ:
             con = fdb.connect(DB, fb_library_name='/opt/firebird/lib/libfbembed.so')
         else:
-            con = fdb.connect(DB) 
+            con = fdb.connect(DB, user='SYSDBA', password='masterkey',) 
 
         cur = con.cursor()
 
@@ -34,7 +34,7 @@ def test_sqlcreate():
         cur.execute("create table languages ( name varchar(20), year_released integer)")
         con.commit()
 
-    cur.execute("insert into LANGUAGES (name, year_released) values ('C',        1972)")
+    cur.execute("insert into languages (name, year_released) values ('C',        1972)")
     cur.execute("insert into languages (name, year_released) values ('Python',   1991)")
     con.commit()
 

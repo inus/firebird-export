@@ -4,26 +4,78 @@
 import fdb
 from shutil import rmtree
 import pandas as pd
+#import polars as pd
 import sys
 import os
 from pathlib import Path
+import streamlit
+
+#sys.settrace('exception')
+#sys.settrace('main')
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
 sys.path.append(os.path.dirname(SCRIPT_DIR + '/fb_export'))
 
 
-from args import get_args
+
+def trace(frame, event, arg):
+    print("%s, %s:%d" % (event, frame.f_code.co_filename, frame.f_lineno))
+    return trace
+
+#sys.settrace(trace)
+
+#from usage import get_args
 from dftools import fix_fields
 from utils import mkdirs
 
 # Change file below to limit the tables and fields 
 # exported from the employee test database
-from limit_sql import SFields, STable
+from limit_app_sql import SFields, STable
 
 # check for test data
 from utils import unzip_testdb
 unzip_testdb()
+
+
+# Firebird export arguments
+from about import VERSION
+import argparse
+
+
+def get_args(*fbe_args):
+    
+    parser = argparse.ArgumentParser(description="Firebird export")
+
+    parser.add_argument( 'path_to_db', type=str, 
+                        help="Firebird server alias or database name \
+                            (eg. employee) or path to database file, eg ./employee.fdb")
+
+    parser.add_argument('--version', action='version', version='%(prog)s version ' + VERSION)
+    parser.add_argument("-e", "--export", action='store_true', default=False, help="Export data")
+    parser.add_argument('-b', '--brief', action='store_true', default=False,help="Shorter info")
+    parser.add_argument('-l', '--limit', action='store_true', default=False,
+                         help="Limit tables and fields to those in limit_sql.py")
+    parser.add_argument('-m', '--maxrows', help="Max number of rows to export")
+    parser.add_argument('-s', '--sampledata', action='store_true', default=False, 
+                        help="Also show sample data records")
+    parser.add_argument('-n', '--numsamples', default=3, help="number of sample rows")
+
+    parser.add_argument('-j', '--join', action='store_true', default=False, 
+                        help="Join output files")
+    format = [ 'csv', 'json',] # 'excel', 'sql', 'hdf', 'pickle', 'html' ....]?
+    parser.add_argument("-F", "--format", choices=format, default='csv', help="Export output format, default .CSV")
+    parser.add_argument("-o", "--outdir", type=str, dest='outdir', default='Export', help="Output directory")
+    parser.add_argument("-u", "--user", type=str, default='SYSDBA', help="Firebird DB username")
+    parser.add_argument("-p", "--password", type=str, default='masterkey', help="Firebird DB password")
+
+
+    if len(fbe_args) == 0: # Command line 
+        args = parser.parse_args()
+    else:  # From module 
+        args = parser.parse_args( fbe_args)
+
+    return args
 
 
 def main(*fbe_arg):
@@ -97,13 +149,16 @@ def main(*fbe_arg):
 
         dataQ = cur.execute(SQL)
         data = dataQ.fetchall()
-        df[table] = pd.DataFrame(data, columns=Fields[table])
-        df[table].reindex(index=Index) 
+        #df[table] = pd.DataFrame(data, columns=Fields[table])
+        df[table] = pd.DataFrame(data) #, schema=[f'col_{i}' for i in range(num_columns)]) 
+        #schema=[f'col_{i}' for i in range(num_columns)]) 
+        #df[table].reindex(index=Index) 
 
         fix_fields(table,df, args)
 
         if not args.brief:
-            print(df[table].info(), file=sys.stderr)
+            #print(df[table].info(), file=sys.stderr)
+            print(df[table], file=sys.stderr)
 
         if args.sampledata:
             SAMPLESQL = "SELECT FIRST " + str(args.numsamples) + ' ' + fields + " from " + table 
