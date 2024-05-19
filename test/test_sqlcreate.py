@@ -2,7 +2,7 @@
 import fdb
 import os
 
-DB = 'test/TEST.fdb'
+DB = 'test/pytest.fdb'
 
 
 def test_sqlcreate():
@@ -10,7 +10,7 @@ def test_sqlcreate():
     if os.path.isfile(DB):
         print("Connecting to existing" + DB)
 
-        if os.environ['GITHUB_ACTIONS']:
+        if 'GITHUB_ACTIONS' in os.environ:
             con = fdb.connect(DB, fb_library_name='/opt/firebird/lib/libfbembed.so')
         else:
             con = fdb.connect(DB) 
@@ -22,7 +22,7 @@ def test_sqlcreate():
     else:
         print("Creating new" + DB)
 
-        if os.getenv('GITHUB_ACTIONS'): # todo fixme
+        if 'GITHUB_ACTIONS' in os.environ:
             con = fdb.create_database(database=DB, user='SYSDBA',
             password='masterkey', fb_library_name='/opt/firebird/lib/libfbembed.so')
         else:

@@ -55,6 +55,8 @@ def main(*fbe_arg):
     if args.limit:  # Use subset in STable and SFields included from XYZ_slct.py 
         Table = STable
 
+    print("Table = ", Table, file=sys.stderr)
+
     for table in Table: 
         print("Table: ", table, file=sys.stderr)
 
@@ -66,16 +68,13 @@ def main(*fbe_arg):
             Field = cur.execute(ALL_FIELDS_SQL).fetchall()    
             Fields[table] = [ Field[i][0].rstrip() for i in range(len(Field)) ]
 
-        print("Fields: ", ','.join(Fields[table]), file=sys.stderr)
-        print("Field count: ", len(Fields[table]), file=sys.stderr)
+        print("Fields = ", Fields[table], file=sys.stderr)
+
+        print("Columns = ", len(Fields[table]), file=sys.stderr)
 
         COUNT_SQL = "select count (*) from " + table
         Count = cur.execute(COUNT_SQL)
-        if not args.brief:
-            print("Rows: ", Count.fetchone()[0], file=sys.stderr)
-        else:
-            if not args.export:
-                print("Rows: ", Count.fetchone()[0], file=sys.stderr)
+        print("Rows = ", Count.fetchone()[0], file=sys.stderr)
 
         INDEX_SQL  = "SELECT s.rdb$field_name FROM rdb$index_segments AS s \
                     LEFT JOIN rdb$relation_constraints AS rc ON (rc.rdb$index_name = s.rdb$index_name) \
@@ -85,7 +84,7 @@ def main(*fbe_arg):
         Idx = cur.execute(INDEX_SQL)
         Index = [x[0].rstrip() for x in Idx.fetchall()]
         if not args.brief:
-            print("Index", end=':', file=sys.stderr)
+            print("Index", end=': ', file=sys.stderr)
             print (Index, file=sys.stderr)
 
         fields = ','.join(Fields[table])
@@ -103,7 +102,8 @@ def main(*fbe_arg):
         fix_fields(table,df, args)
 
         if not args.brief:
-            print(df[table].info(), file=sys.stderr)
+            print("Data types: ", file=sys.stderr)
+            print(df[table].dtypes, file=sys.stderr)
 
         if args.sampledata:
             SAMPLESQL = "SELECT FIRST " + str(args.numsamples) + ' ' + fields + " from " + table 
@@ -111,13 +111,14 @@ def main(*fbe_arg):
             data = dataQ.fetchall()
             print("Sample data: " +  str(args.numsamples) + " rows", file=sys.stderr)
             for d in data: print(d, file=sys.stderr)
-            print(file=sys.stderr)
+        
+        print(file=sys.stderr)
 
         if args.export:
 
             if args.format == 'csv':
                 try:
-                    df_out = df[table].to_csv()
+                    df_out = df[table].to_csv( header=args.nh)
                 except:
                     print("Error converting DF to CSV " + table, file=sys.stderr)
 
@@ -141,8 +142,10 @@ def main(*fbe_arg):
                 with  open( Path ( OUTDIR / filename), fmode) as fp:
                         fp.write(df_out)
 
-
-    rmtree('/tmp/firebird')
+    try:
+        rmtree('/tmp/firebird')
+    except:
+        pass
 
 if __name__ == '__main__':
     main() 

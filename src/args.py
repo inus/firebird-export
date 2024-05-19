@@ -23,6 +23,9 @@ def get_args(*fbe_args):
 
     parser.add_argument('-j', '--join', action='store_true', default=False, 
                         help="Join output files")
+    parser.add_argument('--nh', '--no-headers', action='store_false', default=True, 
+                        help="No column headers exported")
+
     format = [ 'csv', 'json',] # 'excel', 'sql', 'hdf', 'pickle', 'html' ....]?
     parser.add_argument("-F", "--format", choices=format, default='csv', help="Export output format, default .CSV")
     parser.add_argument("-o", "--outdir", type=str, dest='outdir', default='Export', help="Output directory")
