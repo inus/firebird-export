@@ -1,4 +1,6 @@
 # Change Log
+## [0.2.1] - 2024-05-19
+Clean up output somewhat, add `--no-headers` option
 
 ## [0.2.0] - 2024-05-16
 ### Added:
