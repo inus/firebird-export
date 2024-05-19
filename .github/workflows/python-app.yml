@@ -48,7 +48,7 @@ jobs:
         python -m build
     - name: Test dist
       run: |
-        pip install dist/fb_export-0.2.0-py3-none-any.whl
+        pip install dist/fb_export-0.2.1-py3-none-any.whl
         fb_export test/employee.fdb 
     - name: Test usage from python
       run: |
